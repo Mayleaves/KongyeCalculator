@@ -10,7 +10,7 @@ New-Item -ItemType Directory -Force $out,"$out\gen","$out\classes","$out\dex" | 
 $manifest=[IO.File]::ReadAllText("$project\app\src\main\AndroidManifest.xml").Replace('<manifest xmlns:android=','<manifest package="com.kongye.calculator" xmlns:android=')
 [IO.File]::WriteAllText("$out\AndroidManifest.xml",$manifest,(New-Object Text.UTF8Encoding $false))
 Run "$bt\aapt2.exe" @('compile','--dir',"$project\app\src\main\res",'-o',"$out\resources.zip")
-Run "$bt\aapt2.exe" @('link','-o',"$out\unsigned.apk",'-I',$android,'--manifest',"$out\AndroidManifest.xml",'-A',"$project\app\src\main\assets",'--java',"$out\gen",'--min-sdk-version','26','--target-sdk-version','36','--version-code','36','--version-name','1.0.2',"$out\resources.zip")
+Run "$bt\aapt2.exe" @('link','-o',"$out\unsigned.apk",'-I',$android,'--manifest',"$out\AndroidManifest.xml",'-A',"$project\app\src\main\assets",'--java',"$out\gen",'--min-sdk-version','26','--target-sdk-version','36','--version-code','37','--version-name','1.0.3',"$out\resources.zip")
 $sources=@(Get-ChildItem "$project\app\src\main\java","$out\gen" -Filter '*.java' -Recurse | ForEach-Object FullName)
 Run "$Jdk\bin\javac.exe" (@('-encoding','UTF-8','-source','8','-target','8','-classpath',$android,'-d',"$out\classes")+$sources)
 $classes=@(Get-ChildItem "$out\classes" -Filter '*.class' -Recurse | ForEach-Object FullName)

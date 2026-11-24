@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 空叶计算器 1.0.2 -->
+<!-- 空叶计算器 1.0.3 -->
 <html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="utf-8">
@@ -15,7 +15,7 @@ try {
  root.dataset.theme=(nativeTheme||stored?.theme)==='dark'?'dark':'light';
 } catch (_) {}
 </script>
-<title>空叶计算器 · 1.0.2</title>
+<title>空叶计算器 · 1.0.3</title>
 <link id="dynamic-favicon" rel="icon" type="image/svg+xml" href="data:,">
 <style>
 /* 浅色「水墨极简」与深色「暗曜墨白」。 */
@@ -2951,7 +2951,7 @@ input[type="checkbox"] {
 <section id="brand-splash" class="brand-splash splash-overlay splash-stage" aria-label="空叶计算器启动中">
   <div class="skip-row"><button class="skip" id="skip-brand-splash">跳过</button></div>
   <div class="brand-center"><i class="anim-axis-x"></i><i class="anim-axis-y"></i><div class="brand-icon" id="brand-icon"></div><h2 class="anim-title">空叶计算器</h2><p class="anim-sub">极简科学计算 · 留白成算</p></div>
-  <div class="brand-bottom"><div class="brand-progress"><i class="anim-bar"></i></div><span>KONGYE · 1.0.2</span></div>
+  <div class="brand-bottom"><div class="brand-progress"><i class="anim-bar"></i></div><span>KONGYE · 1.0.3</span></div>
 </section>
 <aside class="drawer-layer" id="drawer" aria-label="设置" inert>
     <nav class="drawer-side-rail" id="drawer-rail" aria-label="侧边导航">
@@ -2963,9 +2963,8 @@ input[type="checkbox"] {
       <div class="drawer-header">
         <span class="drawer-logo" id="drawer-logo" aria-hidden="true"></span>
         <h2>空叶计算器</h2>
-        <span class="drawer-version">1.0.2</span>
+        <span class="drawer-version">1.0.3</span>
       </div>
-      <h3 class="drawer-section-title">工具</h3>
       <nav class="drawer-menu" id="navigation" aria-label="工具"></nav>
     </section>
   </aside>
@@ -7690,7 +7689,7 @@ function renderFunctions(body) {
 
 const projectGitHub='https://github.com/Mayleaves/KongyeCalculator';
 let updateScreen=null,releaseScreen=null,releaseRequest=0;
-let lastUpdateState={phase:'idle',currentVersion:'1.0.2',currentCode:36,downloaded:0,total:0};
+let lastUpdateState={phase:'idle',currentVersion:'1.0.3',currentCode:37,downloaded:0,total:0};
 window.onAppUpdateEvent=event=>{
   if(event.kind==='update'){lastUpdateState=event.state;updateScreen?.(event.state);}
   if(event.kind==='history')releaseScreen?.(event);
@@ -7707,7 +7706,7 @@ function renderAbout(body){
     row.setAttribute('aria-label',title);
     const arrow=element('span');arrow.innerHTML=svgIcon('right');
     const trailing=element('span','about-row-trailing');
-    if(title==='检查更新')trailing.append(element('span','about-version',lastUpdateState.currentVersion||'1.0.2'));
+    if(title==='检查更新')trailing.append(element('span','about-version',lastUpdateState.currentVersion||'1.0.3'));
     trailing.append(arrow);row.append(element('span','',title),trailing);list.append(row);
   }
   wrap.append(list);body.append(wrap);
@@ -7732,7 +7731,7 @@ function showCheckUpdate(){
   const act=(label,run)=>actions.append(button(label,run,'update-action'));
   updateScreen=state=>{
     if(!wrap.isConnected)return;
-    current.textContent='当前版本 '+(state.currentVersion||'1.0.2');
+    current.textContent='当前版本 '+(state.currentVersion||'1.0.3');
     const phase=state.phase||'idle';title.textContent={idle:'检查更新',checking:'正在检查更新',available:'发现新版本',current:'已是最新版本',downloading:'正在下载安装包',ready:'下载完成',cancelled:'下载已取消',error:'检查失败','download-error':'下载未完成'}[phase]||'检查更新';
     message.textContent=state.message||'';
     if(phase==='available')message.textContent='新版本 '+releaseDisplayVersion(state);

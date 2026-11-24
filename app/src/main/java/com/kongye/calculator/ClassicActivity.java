@@ -845,7 +845,7 @@ public final class ClassicActivity extends Activity {
         rail.addView(button("×","关闭侧栏",this::closeDrawer),new LinearLayout.LayoutParams(-1,dp(43)));
         rail.addView(new View(this),new LinearLayout.LayoutParams(-1,0,1));
         rail.addView(button("⚙","设置",()->leaveDrawer(this::settings)),new LinearLayout.LayoutParams(-1,dp(43)));
-        rail.addView(button("ⓘ","关于",()->leaveDrawer(()->dialog().setTitle("空叶计算器").setMessage("1.0.2 · Android 8.0 及以上").setPositiveButton("关闭",null).show())),new LinearLayout.LayoutParams(-1,dp(43)));
+        rail.addView(button("ⓘ","关于",()->leaveDrawer(()->dialog().setTitle("空叶计算器").setMessage("1.0.3 · Android 8.0 及以上").setPositiveButton("关闭",null).show())),new LinearLayout.LayoutParams(-1,dp(43)));
         ScrollView cardScroll=new ScrollView(this);cardScroll.setFillViewport(true);cardScroll.setBackground(shape(card,0,22));
         LinearLayout.LayoutParams cp=new LinearLayout.LayoutParams(0,-1,1);cp.setMargins(0,dp(8),dp(8),dp(8));panel.addView(cardScroll,cp);
         LinearLayout entries=column();entries.setPadding(dp(10),dp(15),dp(10),dp(12));cardScroll.addView(entries);
