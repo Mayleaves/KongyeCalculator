@@ -2,6 +2,7 @@ param([string]$Node='node')
 $ErrorActionPreference='Stop'
 $project=Split-Path -Parent $PSScriptRoot
 $tests=@(
+    'verify-about-updates.cjs',
     'verify-drawer-arrow-position.cjs',
     'verify-grouped-graph-responsive-solver.cjs',
     'verify-history-graph-performance.cjs',

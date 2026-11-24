@@ -44,6 +44,7 @@ public final class MainActivity extends Activity {
     private BrandSplashView startup;
     private SharedPreferences appearance;
     private String pendingIcon;
+    private AppUpdates updates;
 
     @Override protected void onCreate(Bundle state) {
         SharedPreferences previous = getSharedPreferences("calculator", MODE_PRIVATE);
@@ -79,6 +80,12 @@ public final class MainActivity extends Activity {
         try {
             byte[] page = buildPage(previous);
             web = new WebView(this);
+            updates = new AppUpdates(this, event -> {
+                String payload = event.toString().replace("\u2028", "\\u2028").replace("\u2029", "\\u2029");
+                runOnUiThread(() -> {
+                    if (web != null) web.evaluateJavascript("window.onAppUpdateEvent?.(" + payload + ")", null);
+                });
+            });
             web.setBackgroundColor(Color.TRANSPARENT);
             web.getSettings().setJavaScriptEnabled(true);
             web.getSettings().setDomStorageEnabled(true);
@@ -212,6 +219,7 @@ public final class MainActivity extends Activity {
 
     @Override protected void onResume() {
         super.onResume();
+        if (updates != null) updates.resume();
         if (web != null) web.evaluateJavascript(
             "if(typeof clearTemporaryResults === 'function') clearTemporaryResults()", null);
     }
@@ -232,6 +240,7 @@ public final class MainActivity extends Activity {
     }
 
     private void disposeWebView() {
+        if (updates != null) { updates.close(); updates = null; }
         if (web == null) return;
         if (web.getParent() instanceof FrameLayout) ((FrameLayout) web.getParent()).removeView(web);
         web.destroy();
@@ -254,6 +263,13 @@ public final class MainActivity extends Activity {
     }
 
     private final class CalculatorHost {
+        @JavascriptInterface public String getUpdateState() { return updates == null ? "{}" : updates.snapshot(); }
+        @JavascriptInterface public void checkUpdates() { if (updates != null) updates.check(); }
+        @JavascriptInterface public void downloadUpdate() { if (updates != null) updates.download(); }
+        @JavascriptInterface public void cancelUpdateDownload() { if (updates != null) updates.cancel(); }
+        @JavascriptInterface public void installUpdate() { if (updates != null) updates.install(); }
+        @JavascriptInterface public void getReleaseHistory(int id, int page, String search) { if (updates != null) updates.history(id, page, search); }
+        @JavascriptInterface public void openGitHub(String url) { if (updates != null && url != null) updates.openGitHub(url); }
         @JavascriptInterface public void setDark(boolean dark) {
             appearance.edit().putBoolean("dark", dark).apply();
             runOnUiThread(() -> {

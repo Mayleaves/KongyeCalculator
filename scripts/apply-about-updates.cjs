@@ -1,0 +1,11 @@
+const fs=require('node:fs'),path=require('node:path');
+const root=path.resolve(__dirname,'..'),file=path.join(root,'app/src/main/assets/calculator.html');
+let html=fs.readFileSync(file,'utf8');
+let start=html.indexOf('const projectGitHub=');
+if(start<0)start=html.indexOf('function renderAbout(body) {');
+const end=html.indexOf('// ==================== 初始化启动',start);
+if(start<0||end<0)throw Error('About section missing');
+html=html.slice(0,start)+fs.readFileSync(path.join(__dirname,'about-updates.js'),'utf8')+'\n\n'+html.slice(end);
+html=html.replace(/<style id="about-updates">[\s\S]*?<\/style>\s*/,'');
+html=html.replace('</head>',()=>'<style id="about-updates">\n'+fs.readFileSync(path.join(__dirname,'about-updates.css'),'utf8')+'</style>\n</head>');
+fs.writeFileSync(file,html);
