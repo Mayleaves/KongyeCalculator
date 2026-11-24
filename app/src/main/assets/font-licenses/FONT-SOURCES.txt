@@ -1,0 +1,4 @@
+Unmodified fonts embedded in calculator.html:
+Latin Modern Math 1.959: https://ctan.org/pkg/lm-math
+Latin Modern Roman 10 Italic: https://ctan.org/pkg/lm
+Both distributed under the GUST Font License (included).
