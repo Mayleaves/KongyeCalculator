@@ -6,8 +6,8 @@ android {
         applicationId = "com.kongye.calculator"
         minSdk = 26
         targetSdk = 36
-        versionCode = 35
-        versionName = "1.0.1"
+        versionCode = 36
+        versionName = "1.0.2"
         testInstrumentationRunner = providers.gradleProperty("instrumentationRunner")
             .orElse("com.kongye.calculator.GraphDeviceTest").get()
     }
@@ -29,6 +29,7 @@ android {
     testBuildType = "release"
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
 }
+
 
 
 

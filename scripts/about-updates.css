@@ -4,6 +4,8 @@
 .about-row+.about-row {border-top:1px solid var(--line);}
 .about-row svg {width:17px;height:17px;fill:none;stroke:var(--muted);stroke-width:1.6;}
 .about-row:active {background:var(--soft);}
+.about-row-trailing {display:flex;align-items:center;gap:12px;}
+.about-version {color:var(--muted);font-size:13px;font-weight:400;font-variant-numeric:tabular-nums;}
 .update-card {margin:20px 14px;padding:22px 18px;background:var(--card);border-radius:16px;}
 .update-current {margin:0 0 16px;color:var(--muted);font-size:12px;}
 .update-title {font-size:19px;font-weight:600;margin:0 0 9px;}
@@ -32,10 +34,18 @@
 .release-page-button {padding:10px 16px;border-radius:9px;background:var(--card);color:var(--ink);font-size:13px;}
 .release-page-button:disabled {opacity:.35;}
 .release-empty {padding:36px 16px;text-align:center;font-size:13px;color:var(--muted);}
-.app-update-notice {width:min(360px,calc(100% - 36px));max-height:75dvh;margin:auto;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;}
-.app-update-notice::backdrop {background:#0006;}
-.app-update-notice h2 {font-size:18px;font-weight:600;margin:0 0 8px;}
-.update-notice-version {font-size:13px;color:var(--muted);margin:0 0 16px;}
-.update-notice-notes {max-height:40dvh;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.7;color:var(--ink-secondary);}
-.update-notice-actions {display:flex;justify-content:flex-end;gap:10px;margin-top:20px;}
-.update-notice-actions .update-action:last-child {background:var(--selected);color:var(--on-selected);}
+.app-update-dialog {width:min(360px,calc(100% - 36px));max-height:80dvh;margin:auto;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;}
+.app-update-dialog::backdrop {background:#0006;}
+.app-update-dialog .update-card {margin:0;padding:0;border-radius:0;}
+.app-update-dialog .update-notes {max-height:38dvh;overflow:auto;white-space:normal;}
+.app-update-dialog .update-actions {justify-content:flex-end;}
+.app-update-dialog .update-actions .update-action:last-child:not(:first-child) {background:var(--selected);color:var(--on-selected);}
+.formatted-release-notes {font-size:13px;line-height:1.7;color:var(--ink-secondary);overflow-wrap:anywhere;}
+.formatted-release-notes p {margin:0 0 10px;}
+.formatted-release-notes h3 {font-size:13px;font-weight:600;color:var(--ink);margin:14px 0 8px;}
+.formatted-release-notes ul {padding-left:1.25em;margin:0 0 10px;}
+.formatted-release-notes li {padding-left:.1em;margin:5px 0;}
+.formatted-release-notes code {font-size:.95em;}
+.formatted-release-notes>:first-child {margin-top:0;}
+.formatted-release-notes>:last-child {margin-bottom:0;}
+.release-entry-heading {flex-wrap:wrap;}

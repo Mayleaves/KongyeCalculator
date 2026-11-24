@@ -45,27 +45,31 @@ public final class UpdateDeviceTest extends Instrumentation {
         js("document.getElementById('skip-brand-splash')?.click();openPage('关于');return true;");
         check(((Number)js("return document.querySelectorAll('.about-row').length")).intValue()==2,"About must have only two entries");
         check("关于".equals(js("return document.getElementById('drawer-about').ariaLabel")),"Old About name remains");
+        check(Boolean.TRUE.equals(js("return document.querySelector('.about-version').textContent===JSON.parse(CalculatorHost.getUpdateState()).currentVersion")),"Version is not beside Check Updates");
         js("window.updateTestEvents=[];const receive=onAppUpdateEvent;window.onAppUpdateEvent=e=>{if(e.kind==='update')updateTestEvents.push(JSON.parse(JSON.stringify(e.state)));receive(e);};openPage('检查更新');return true;");
         waitFor("!['idle','checking'].includes(JSON.parse(CalculatorHost.getUpdateState()).phase)");
         JSONObject network=state();check(!"error".equals(network.optString("phase")),"GitHub check failed: "+network);
+        check("关于".equals(js("return document.getElementById('utility-title').textContent")),"Check Updates navigated away from About");
+        check(Boolean.TRUE.equals(js("return !!document.querySelector('.app-update-dialog[open]')")),"Check Updates is not a dialog");
         if(download){
             check("available".equals(network.optString("phase")),"Expected a newer release: "+network);
-            waitFor("!!document.querySelector('.app-update-notice[open]')");shot("qa-update-available");
-            clickText(".update-notice-actions button","立即下载");
+            waitFor("document.querySelector('.app-update-dialog .update-title')?.textContent==='发现新版本'");shot("qa-update-available");
+            clickText(".update-actions button","立即下载");
             waitFor("['ready','download-error','cancelled'].includes(JSON.parse(CalculatorHost.getUpdateState()).phase)");
             JSONObject completed=state();check("ready".equals(completed.optString("phase")),"Download failed: "+completed);
             check(completed.getLong("downloaded")==completed.getLong("total")&&completed.getLong("total")>1000000,"Wrong byte counts");
             check(Boolean.TRUE.equals(js("return updateTestEvents.some(s=>s.phase==='downloading'&&s.downloaded>0&&s.downloaded<s.total)")),"No intermediate download progress");
             check(((Number)js("return document.querySelector('.update-progress').value")).intValue()==100,"Progress not complete");
-            js("document.getElementById('open-drawer').click();openPage('检查更新');return true;");
+            js("androidBack();showCheckUpdate();return true;");
             check("ready".equals(state().getString("phase")),"Download state lost on navigation");
             try(android.os.ParcelFileDescriptor fd=getTargetContext().getContentResolver().openFileDescriptor(Uri.parse("content://com.kongye.calculator.updates/update.apk"),"r")){check(fd!=null,"Installer cannot read verified APK");}
             boolean blocked=false;try{getTargetContext().getContentResolver().openFileDescriptor(Uri.parse("content://com.kongye.calculator.updates/other.apk"),"r");}catch(java.io.FileNotFoundException expected){blocked=true;}check(blocked,"Provider exposed another path");
             shot("qa-update-downloaded");report.putString("stream","PASS real GitHub update prompt, APK download with intermediate progress, checksum/package/signature/newer-version verification, persistent state and narrow install URI "+completed+"\n");
         }else{
-            if(Boolean.TRUE.equals(js("return !!document.querySelector('.app-update-notice')")))clickText(".update-notice-actions button","稍后");
+            js("androidBack();return true;");
             js("openPage('更新历史');return true;");waitFor("document.querySelectorAll('.release-entry').length>0");
             check(Boolean.TRUE.equals(js("return !!document.querySelector('#utility-actions .release-github svg')&&document.querySelector('.release-history-header').children.length===1")),"GitHub icon is not at top right");
+            check(Boolean.TRUE.equals(js("return [...document.querySelectorAll('.release-entry')].every(n=>!/# 空叶计算器|build \\d+|版本名称|版本代码/.test(n.textContent))")),"Release Markdown metadata remains visible");
             shot("qa-update-history-live");
             Field field=MainActivity.class.getDeclaredField("updates");field.setAccessible(true);AppUpdates updates=(AppUpdates)field.get(activity);
             Field releases=AppUpdates.class.getDeclaredField("releases"),at=AppUpdates.class.getDeclaredField("releasesAt");releases.setAccessible(true);at.setAccessible(true);

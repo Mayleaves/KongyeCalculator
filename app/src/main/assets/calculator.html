@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 空叶计算器 1.0.1 -->
+<!-- 空叶计算器 1.0.2 -->
 <html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="utf-8">
@@ -15,7 +15,7 @@ try {
  root.dataset.theme=(nativeTheme||stored?.theme)==='dark'?'dark':'light';
 } catch (_) {}
 </script>
-<title>空叶计算器 · 1.0.1</title>
+<title>空叶计算器 · 1.0.2</title>
 <link id="dynamic-favicon" rel="icon" type="image/svg+xml" href="data:,">
 <style>
 /* 浅色「水墨极简」与深色「暗曜墨白」。 */
@@ -2874,11 +2874,12 @@ input[type="checkbox"] {
 </style>
 <style id="responsive-solver-navigation">
 #back {visibility:hidden;pointer-events:none;}
-#open-drawer {--nav-inset:8px;left:var(--nav-inset);transform:none;transition:left 180ms ease-out;}
+#open-drawer {--nav-inset:8px;left:var(--nav-inset);transform:none;transition:none;}
 /* left percentages resolve against the stage; transform percentages resolve
    against the small button itself and leave the arrow over the drawer. */
 .stage[data-drawer="open"]:not([data-utility="open"]) #open-drawer {left:calc(var(--nav-inset) + var(--push-offset));transform:none;}
 @media(max-width:340px){#open-drawer {--nav-inset:5px;}}
+.stage[data-drawer-motion="true"] #open-drawer {transition:left 180ms ease-out;}
 #open-drawer path {transition:transform 240ms cubic-bezier(.22,1,.36,1);opacity:1;}
 #open-drawer[data-back="false"] path {transform:none;}
 #open-drawer path:nth-child(1) {transform-origin:4px 7px;}
@@ -2896,6 +2897,8 @@ input[type="checkbox"] {
 .about-row+.about-row {border-top:1px solid var(--line);}
 .about-row svg {width:17px;height:17px;fill:none;stroke:var(--muted);stroke-width:1.6;}
 .about-row:active {background:var(--soft);}
+.about-row-trailing {display:flex;align-items:center;gap:12px;}
+.about-version {color:var(--muted);font-size:13px;font-weight:400;font-variant-numeric:tabular-nums;}
 .update-card {margin:20px 14px;padding:22px 18px;background:var(--card);border-radius:16px;}
 .update-current {margin:0 0 16px;color:var(--muted);font-size:12px;}
 .update-title {font-size:19px;font-weight:600;margin:0 0 9px;}
@@ -2924,13 +2927,21 @@ input[type="checkbox"] {
 .release-page-button {padding:10px 16px;border-radius:9px;background:var(--card);color:var(--ink);font-size:13px;}
 .release-page-button:disabled {opacity:.35;}
 .release-empty {padding:36px 16px;text-align:center;font-size:13px;color:var(--muted);}
-.app-update-notice {width:min(360px,calc(100% - 36px));max-height:75dvh;margin:auto;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;}
-.app-update-notice::backdrop {background:#0006;}
-.app-update-notice h2 {font-size:18px;font-weight:600;margin:0 0 8px;}
-.update-notice-version {font-size:13px;color:var(--muted);margin:0 0 16px;}
-.update-notice-notes {max-height:40dvh;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.7;color:var(--ink-secondary);}
-.update-notice-actions {display:flex;justify-content:flex-end;gap:10px;margin-top:20px;}
-.update-notice-actions .update-action:last-child {background:var(--selected);color:var(--on-selected);}
+.app-update-dialog {width:min(360px,calc(100% - 36px));max-height:80dvh;margin:auto;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;}
+.app-update-dialog::backdrop {background:#0006;}
+.app-update-dialog .update-card {margin:0;padding:0;border-radius:0;}
+.app-update-dialog .update-notes {max-height:38dvh;overflow:auto;white-space:normal;}
+.app-update-dialog .update-actions {justify-content:flex-end;}
+.app-update-dialog .update-actions .update-action:last-child:not(:first-child) {background:var(--selected);color:var(--on-selected);}
+.formatted-release-notes {font-size:13px;line-height:1.7;color:var(--ink-secondary);overflow-wrap:anywhere;}
+.formatted-release-notes p {margin:0 0 10px;}
+.formatted-release-notes h3 {font-size:13px;font-weight:600;color:var(--ink);margin:14px 0 8px;}
+.formatted-release-notes ul {padding-left:1.25em;margin:0 0 10px;}
+.formatted-release-notes li {padding-left:.1em;margin:5px 0;}
+.formatted-release-notes code {font-size:.95em;}
+.formatted-release-notes>:first-child {margin-top:0;}
+.formatted-release-notes>:last-child {margin-bottom:0;}
+.release-entry-heading {flex-wrap:wrap;}
 </style>
 </head>
 <body>
@@ -2940,7 +2951,7 @@ input[type="checkbox"] {
 <section id="brand-splash" class="brand-splash splash-overlay splash-stage" aria-label="空叶计算器启动中">
   <div class="skip-row"><button class="skip" id="skip-brand-splash">跳过</button></div>
   <div class="brand-center"><i class="anim-axis-x"></i><i class="anim-axis-y"></i><div class="brand-icon" id="brand-icon"></div><h2 class="anim-title">空叶计算器</h2><p class="anim-sub">极简科学计算 · 留白成算</p></div>
-  <div class="brand-bottom"><div class="brand-progress"><i class="anim-bar"></i></div><span>KONGYE · 1.0.1</span></div>
+  <div class="brand-bottom"><div class="brand-progress"><i class="anim-bar"></i></div><span>KONGYE · 1.0.2</span></div>
 </section>
 <aside class="drawer-layer" id="drawer" aria-label="设置" inert>
     <nav class="drawer-side-rail" id="drawer-rail" aria-label="侧边导航">
@@ -2952,7 +2963,7 @@ input[type="checkbox"] {
       <div class="drawer-header">
         <span class="drawer-logo" id="drawer-logo" aria-hidden="true"></span>
         <h2>空叶计算器</h2>
-        <span class="drawer-version">1.0.1</span>
+        <span class="drawer-version">1.0.2</span>
       </div>
       <h3 class="drawer-section-title">工具</h3>
       <nav class="drawer-menu" id="navigation" aria-label="工具"></nav>
@@ -3598,7 +3609,14 @@ function setTheme(next) {
 
 $('toggle-theme').onclick = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
+let drawerMotionTimer;
+function stopDrawerMotion(){clearTimeout(drawerMotionTimer);delete $('stage').dataset.drawerMotion;}
 function toggleDrawer(open) {
+  const changes=$('stage').dataset.drawer!==(open?'open':'closed');
+  if(changes&&$('stage').dataset.utility!=='open'){
+    clearTimeout(drawerMotionTimer);$('stage').dataset.drawerMotion='true';
+    drawerMotionTimer=setTimeout(stopDrawerMotion,200);
+  }
   if (open) showSavedResults(false);
   $('stage').dataset.drawer = open ? 'open' : 'closed';
   $('drawer').inert = !open;
@@ -6109,6 +6127,7 @@ let utilityOrigin = 'home';
 let utilityClosing;
 
 function closeUtility() {
+  stopDrawerMotion();
   stopMathToolPage(true);
   closeDateSheet();
   clearInterval(clockTimer);
@@ -6140,6 +6159,7 @@ $('back').onclick = () => ['检查更新','更新历史'].includes($('utility-ti
 $('open-history').onclick = () => openPage('历史记录');
 
 function openPage(title) {
+  stopDrawerMotion();
   stopMathToolPage();
   closeDateSheet();
   showSavedResults(false);
@@ -7670,8 +7690,7 @@ function renderFunctions(body) {
 
 const projectGitHub='https://github.com/Mayleaves/KongyeCalculator';
 let updateScreen=null,releaseScreen=null,releaseRequest=0;
-let updateNoticeKey='';
-let lastUpdateState={phase:'idle',currentVersion:'1.0.1',currentCode:35,downloaded:0,total:0};
+let lastUpdateState={phase:'idle',currentVersion:'1.0.2',currentCode:36,downloaded:0,total:0};
 window.onAppUpdateEvent=event=>{
   if(event.kind==='update'){lastUpdateState=event.state;updateScreen?.(event.state);}
   if(event.kind==='history')releaseScreen?.(event);
@@ -7682,10 +7701,14 @@ function openProjectGitHub(url=projectGitHub){
 }
 function renderAbout(body){
   const wrap=element('div','scroll-body about-page'),list=element('div','about-menu');
+  if(nativeHost?.getUpdateState){try{lastUpdateState=JSON.parse(nativeHost.getUpdateState());}catch{}}
   for(const title of ['检查更新','更新历史']){
-    const row=button('',()=>openPage(title),'about-row');
+    const row=button('',()=>title==='检查更新'?showCheckUpdate():openPage(title),'about-row');
+    row.setAttribute('aria-label',title);
     const arrow=element('span');arrow.innerHTML=svgIcon('right');
-    row.append(element('span','',title),arrow);list.append(row);
+    const trailing=element('span','about-row-trailing');
+    if(title==='检查更新')trailing.append(element('span','about-version',lastUpdateState.currentVersion||'1.0.2'));
+    trailing.append(arrow);row.append(element('span','',title),trailing);list.append(row);
   }
   wrap.append(list);body.append(wrap);
 }
@@ -7693,55 +7716,79 @@ function updateBytes(value){
   const n=Number(value)||0;
   return n<1024*1024?(n/1024).toFixed(n?1:0)+' KB':(n/1024/1024).toFixed(1)+' MB';
 }
-function showUpdateNotice(state){
-  const key=(state.version||state.name||'new')+':'+(state.currentCode||'');
-  if(key===updateNoticeKey||document.querySelector('.app-update-notice'))return;
-  updateNoticeKey=key;
-  const notice=element('dialog','app-update-notice');notice.setAttribute('aria-label','发现新版本');
-  const close=()=>{notice.close();notice.remove();};
-  notice.append(element('h2','','发现新版本'),element('p','update-notice-version',state.name||state.version||'新版本已发布'));
-  if(state.notes)notice.append(element('div','update-notice-notes',state.notes));
-  const actions=element('div','update-notice-actions');
-  actions.append(button('稍后',close,'update-action'),button('立即下载',()=>{close();nativeHost?.downloadUpdate?.();},'update-action'));
-  notice.append(actions);notice.addEventListener('cancel',event=>{event.preventDefault();close();});
-  $('stage').append(notice);notice.showModal();
-}
-function renderCheckUpdate(body){
-  const wrap=element('div','scroll-body update-page'),card=element('section','update-card');
+function showCheckUpdate(){
+  const existing=document.querySelector('.app-update-dialog');if(existing)return;
+  const wrap=element('dialog','app-update-dialog');wrap.setAttribute('aria-label','检查更新');
+  const card=element('section','update-card');
   const current=element('p','update-current'),title=element('h2','update-title'),message=element('p','update-message');
   const notes=element('div','update-notes');
   const progressBox=element('div','update-progress-box'),progress=element('progress','update-progress');
   progress.max=100;progress.setAttribute('aria-label','安装包下载进度');
   const details=element('div','update-progress-details'),amount=element('span'),percent=element('span');details.append(amount,percent);progressBox.append(progress,details);
   const actions=element('div','update-actions');
-  card.append(current,title,message,progressBox,notes,actions);wrap.append(card);body.append(wrap);
+  card.append(current,title,message,progressBox,notes,actions);wrap.append(card);$('stage').append(wrap);
+  const close=()=>{wrap.close();wrap.remove();};
+  wrap.addEventListener('cancel',event=>{event.preventDefault();close();});wrap.showModal();
   const act=(label,run)=>actions.append(button(label,run,'update-action'));
   updateScreen=state=>{
     if(!wrap.isConnected)return;
-    current.textContent='当前版本 '+(state.currentVersion||'1.0.1');
+    current.textContent='当前版本 '+(state.currentVersion||'1.0.2');
     const phase=state.phase||'idle';title.textContent={idle:'检查更新',checking:'正在检查更新',available:'发现新版本',current:'已是最新版本',downloading:'正在下载安装包',ready:'下载完成',cancelled:'下载已取消',error:'检查失败','download-error':'下载未完成'}[phase]||'检查更新';
-    if(phase==='checking')updateNoticeKey='';
     message.textContent=state.message||'';
-    if(phase==='available')message.textContent=state.name||state.version||'新版本已发布';
-    notes.textContent=['available','downloading','ready','cancelled','download-error'].includes(phase)?state.notes||'':'';notes.hidden=!notes.textContent;
+    if(phase==='available')message.textContent='新版本 '+releaseDisplayVersion(state);
+    notes.replaceChildren();
+    const withNotes=['available','downloading','ready','cancelled','download-error'].includes(phase)&&state.notes;
+    if(withNotes)notes.append(releaseNotesDOM(state.notes));notes.hidden=!withNotes;
     progressBox.hidden=!['downloading','ready','cancelled','download-error'].includes(phase)||!state.total;
     const ratio=state.total?Math.max(0,Math.min(100,(state.downloaded||0)/state.total*100)):0;
     progress.value=ratio;progress.setAttribute('aria-valuetext',Math.floor(ratio)+'%');
     percent.textContent=Math.floor(ratio)+'%';amount.textContent=updateBytes(state.downloaded)+' / '+updateBytes(state.total);
     actions.replaceChildren();
-    if(['idle','current','error'].includes(phase))act(phase==='error'?'重试':'重新检查',()=>nativeHost?.checkUpdates?.());
-    if(['available','cancelled','download-error'].includes(phase))act(phase==='available'?'下载更新':'重新下载',()=>nativeHost?.downloadUpdate?.());
+    act(phase==='available'?'稍后':phase==='current'?'确定':'关闭',close);
+    if(phase==='error')act('重试',()=>nativeHost?.checkUpdates?.());
+    if(['available','cancelled','download-error'].includes(phase))act(phase==='available'?'立即下载':'重新下载',()=>nativeHost?.downloadUpdate?.());
     if(phase==='downloading')act('取消下载',()=>nativeHost?.cancelUpdateDownload?.());
     if(phase==='ready')act('安装更新',()=>nativeHost?.installUpdate?.());
-    if(phase==='available')showUpdateNotice(state);
   };
   if(nativeHost?.getUpdateState){
     try{lastUpdateState=JSON.parse(nativeHost.getUpdateState());}catch{}
     updateScreen(lastUpdateState);
     if(['idle','current','error'].includes(lastUpdateState.phase))nativeHost.checkUpdates();
   }else{
-    updateScreen({...lastUpdateState,phase:'error',message:'请在 Android 应用中检查更新'});actions.replaceChildren();
+    updateScreen({...lastUpdateState,phase:'error',message:'请在 Android 应用中检查更新'});actions.replaceChildren();act('关闭',close);
   }
+}
+// Kept for deep links and older callers; update checks never change the page.
+function renderCheckUpdate(){openPage('关于');showCheckUpdate();}
+function releaseDisplayVersion(release){
+  const match=String(release.tag||release.version||release.name||'').match(/\d+\.\d+(?:\.\d+)?(?:[-+][\w.-]+)?/);
+  return match?match[0]:release.name||release.tag||'版本更新';
+}
+function releaseNotesDOM(source){
+  const content=element('div','formatted-release-notes');
+  let list=null,paragraph=[];
+  const inline=(node,text)=>{
+    // Only create text and a few presentational nodes. Remote HTML never runs.
+    const pieces=String(text).split(/(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\([^)]*\))/g);
+    for(const part of pieces){
+      if(part.startsWith('**')&&part.endsWith('**'))node.append(element('strong','',part.slice(2,-2)));
+      else if(part.startsWith('`')&&part.endsWith('`'))node.append(element('code','',part.slice(1,-1)));
+      else if(/^\[/.test(part)&&/\]\([^)]*\)$/.test(part))node.append(part.slice(1,part.indexOf(']')));
+      else node.append(part);
+    }
+  };
+  const flush=()=>{if(paragraph.length){const p=element('p');inline(p,paragraph.join(' '));content.append(p);paragraph=[];}};
+  for(const raw of String(source||'').replace(/\r/g,'').split('\n')){
+    const line=raw.trim();
+    if(/^#{1,6}\s+.*(?:空叶计算器|\bv?\d+\.\d+)/i.test(line)||/^(?:版本名称|版本代码|包名)\s*[：:]/.test(line))continue;
+    if(!line){flush();list=null;continue;}
+    const bullet=/^(?:[-*+]\s+|\d+[.)]\s+)(.+)/.exec(line);
+    if(bullet){flush();if(!list){list=element('ul');content.append(list);}const item=element('li');inline(item,bullet[1]);list.append(item);continue;}
+    const heading=/^#{1,6}\s+(.+)/.exec(line);
+    if(heading){flush();list=null;const h=element('h3');inline(h,heading[1]);content.append(h);continue;}
+    list=null;paragraph.push(line);
+  }
+  flush();if(!content.childNodes.length)content.append(element('p','','本版本暂无更新说明'));return content;
 }
 function renderReleaseHistory(body){
   const wrap=element('div','scroll-body release-history-page');
@@ -7772,8 +7819,8 @@ function renderReleaseHistory(body){
     for(const release of event.items){
       const item=element('article','release-entry'),heading=element('div','release-entry-heading');
       const date=release.date?new Date(release.date).toLocaleDateString('zh-CN'):'';
-      heading.append(element('h2','',release.name||release.tag),element('time','',date));
-      item.append(heading,element('div','release-notes',release.body||'本版本暂无更新说明'),button('在 GitHub 查看',()=>openProjectGitHub(release.url),'release-link'));
+      heading.append(element('h2','',releaseDisplayVersion(release)),element('time','',date));
+      item.append(heading,releaseNotesDOM(release.body),button('在 GitHub 查看',()=>openProjectGitHub(release.url),'release-link'));
       entries.append(item);
     }
   };
@@ -7785,7 +7832,7 @@ function renderReleaseHistory(body){
 
 // ==================== 初始化启动 ====================
 function androidBack() {
-  const updateNotice=document.querySelector('.app-update-notice');if(updateNotice){updateNotice.close();updateNotice.remove();return true;}
+  const updateNotice=document.querySelector('.app-update-dialog');if(updateNotice){updateNotice.close();updateNotice.remove();return true;}
   const sheet=document.querySelector('.date-sheet-overlay.is-open');
   if(sheet){sheet.closeSheet();return true;}
   const city=document.querySelector('.city-picker-heading button');

@@ -78,10 +78,12 @@ public final class GraphDeviceTest extends Instrumentation {
                     check(Math.abs(geometry.getDouble("gap")-((Number)js("return window.drawerTestInset")).doubleValue())<1,"Arrow misaligned "+geometry);
                     check(geometry.getBoolean("hit"),"Arrow cannot be tapped");
                     screenshot("qa-34-drawer-"+theme);
-                    js("openPage('计算设置');return true;");SystemClock.sleep(280);
+                    js("window.navFrames=[];openPage('计算设置');let start=performance.now();function sample(){navFrames.push(document.getElementById('open-drawer').getBoundingClientRect().left-document.getElementById('stage').getBoundingClientRect().left);if(performance.now()-start<210)requestAnimationFrame(sample);}sample();return true;");SystemClock.sleep(280);
                     check(Boolean.TRUE.equals(js("const b=document.getElementById('open-drawer').getBoundingClientRect(),s=document.getElementById('stage').getBoundingClientRect();return Math.abs(b.left-s.left-window.drawerTestInset)<1;")),"Tool page arrow shifted");
-                    js("document.getElementById('open-drawer').click();return true;");SystemClock.sleep(280);
+                    check(Boolean.TRUE.equals(js("return navFrames.length>3&&navFrames.every(x=>Math.abs(x-window.drawerTestInset)<1);")),"Arrow crossed tool page during entry");
+                    js("window.navFrames=[];document.getElementById('open-drawer').click();let start=performance.now();function sample(){navFrames.push(document.getElementById('open-drawer').getBoundingClientRect().left-document.querySelector('.home-card-shell').getBoundingClientRect().left);if(performance.now()-start<210)requestAnimationFrame(sample);}sample();return true;");SystemClock.sleep(280);
                     check(Boolean.TRUE.equals(js("const b=document.getElementById('open-drawer').getBoundingClientRect(),h=document.querySelector('.home-card-shell').getBoundingClientRect();return Math.abs(b.left-h.left-window.drawerTestInset)<1;")),"Arrow failed to return beside calculator");
+                    check(Boolean.TRUE.equals(js("return navFrames.length>3&&navFrames.every(x=>Math.abs(x-window.drawerTestInset)<1);")),"Arrow crossed tool page during return");
                     js("document.getElementById('open-drawer').click();return true;");SystemClock.sleep(280);
                     result.put(theme,geometry);
                 }

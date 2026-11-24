@@ -77,6 +77,7 @@ async function run() {
 
 
 await click('#skip-brand-splash');await pause(250);
+const sampleNav=async action=>js('new Promise(resolve=>{'+action+';const samples=[];let start=performance.now();function frame(){samples.push(document.getElementById("open-drawer").getBoundingClientRect().left-document.getElementById("stage").getBoundingClientRect().left);if(performance.now()-start<210)requestAnimationFrame(frame);else resolve(samples);}frame();})');
 const geometry=()=>js('(()=>{const s=document.getElementById("stage").getBoundingClientRect(),b=document.getElementById("open-drawer").getBoundingClientRect(),home=document.querySelector(".home-card-shell").getBoundingClientRect();return {x:b.left-s.left,y:b.top-s.top,homeX:home.left-s.left,width:b.width,hit:document.elementFromPoint(b.left+b.width/2,b.top+b.height/2)?.closest("#open-drawer")?.id||null};})()');
 for(const width of [320,360,412,480,720]){
  await send('Emulation.setDeviceMetricsOverride',{width,height:880,deviceScaleFactor:1,mobile:true});
@@ -89,8 +90,8 @@ for(const width of [320,360,412,480,720]){
   assert(Math.abs(open.x-open.homeX-closed.x)<1);assert.equal(open.hit,'open-drawer');
   assert(open.homeX>200);assert.equal(await js('document.querySelector("#open-drawer").dataset.back'),'true');
   if(width===412)await shot('drawer-arrow-fixed-'+theme+'.png');
-  await js('openPage("计算设置")');await pause(270);const tool=await geometry();assert.equal(tool.x,closed.x);assert.equal(tool.hit,'open-drawer');
-  await click('#open-drawer');await pause(270);const back=await geometry();assert(Math.abs(back.x-open.x)<1);assert.equal(back.hit,'open-drawer');
+  const enter=await sampleNav('openPage("计算设置")');assert(enter.every(x=>Math.abs(x-closed.x)<1),JSON.stringify({width,theme,enter}));const tool=await geometry();assert.equal(tool.x,closed.x);assert.equal(tool.hit,'open-drawer');
+  const leave=await sampleNav('document.getElementById("open-drawer").click()');assert(leave.every(x=>Math.abs(x-open.x)<1),JSON.stringify({width,theme,leave}));const back=await geometry();assert(Math.abs(back.x-open.x)<1);assert.equal(back.hit,'open-drawer');
   await click('#open-drawer');await pause(270);assert(Math.abs((await geometry()).x-closed.x)<1);
  }
 }

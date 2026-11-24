@@ -79,19 +79,27 @@ async function run() {
 
 
 
-await click('#skip-brand-splash');await pause(200);
-await click('#open-drawer');await pause(200);await click('#drawer-about');await pause(200);
-assert.equal(await heading(),'关于');assert.deepEqual(await js('[...document.querySelectorAll(".about-row")].map(n=>n.textContent)'),['检查更新','更新历史']);
-assert.equal(await js('document.querySelector("#drawer-about").ariaLabel'),'关于');
-await named('.about-row','检查更新');await pause(90);assert.equal(await heading(),'检查更新');assert.match(await js('document.querySelector(".update-title").textContent'),/发现新版本/);
-assert.equal(await js('document.querySelector(".app-update-notice").open'),true);await named('.update-notice-actions button','稍后');assert.equal(await js('!!document.querySelector(".app-update-notice")'),false);await js('updateNoticeKey="";showUpdateNotice(fakeUpdateState);');await named('.update-notice-actions button','立即下载');assert.equal(await js('document.querySelector(".update-progress").value'),50);assert.match(await js('document.querySelector(".update-progress-details").textContent'),/5.0 MB.*10.0 MB.*50%/);
-await click('#open-drawer');await pause(100);assert.equal(await heading(),'关于');await named('.about-row','检查更新');await pause(60);assert.equal(await js('document.querySelector(".update-progress").value'),50);
-await named('.update-actions button','取消下载');assert.match(await js('document.querySelector(".update-title").textContent'),/下载已取消/);
-await named('.update-actions button','重新下载');
+
+await click('#skip-brand-splash');
+const formatted=await js('(()=>{const source="# 空叶计算器 1.0.1 · build 35\\n\\n- 修复 **公式**\\n- 支持 `a/b`\\n\\n版本名称：1.0.1\\n版本代码：35";const node=releaseNotesDOM(source.replaceAll("\\\\n",String.fromCharCode(10)));return {text:node.textContent,bullets:node.querySelectorAll("li").length,strong:node.querySelectorAll("strong").length};})()');
+assert.equal(formatted.bullets,2);assert.equal(formatted.strong,1);assert(!/#|build 35|版本代码|版本名称/.test(formatted.text));
+await pause(200);
+await click('#open-drawer');await pause(240);await click('#drawer-about');await pause(180);
+assert.equal(await heading(),'关于');assert.deepEqual(await js('[...document.querySelectorAll(".about-row")].map(n=>n.ariaLabel)'),['检查更新','更新历史']);
+assert.equal(await js('document.querySelector(".about-version").textContent'),'1.0.1');
+await click('.about-row[aria-label="检查更新"]');await pause(90);
+assert.equal(await heading(),'关于');assert.equal(await js('document.querySelector(".app-update-dialog").open'),true);
+assert.match(await js('document.querySelector(".update-title").textContent'),/发现新版本/);
+await named('.update-actions button','稍后');assert.equal(await js('!!document.querySelector(".app-update-dialog")'),false);assert.equal(await heading(),'关于');
+await click('.about-row[aria-label="检查更新"]');await named('.update-actions button','立即下载');
+assert.equal(await js('document.querySelector(".update-progress").value'),50);assert.match(await js('document.querySelector(".update-progress-details").textContent'),/5.0 MB.*10.0 MB.*50%/);
+await named('.update-actions button','关闭');await click('.about-row[aria-label="检查更新"]');assert.equal(await js('document.querySelector(".update-progress").value'),50);
+await named('.update-actions button','取消下载');assert.match(await js('document.querySelector(".update-title").textContent'),/下载已取消/);await named('.update-actions button','重新下载');
 await js('fakeUpdateState={...fakeUpdateState,phase:"ready",message:"下载完成，可以安装",downloaded:10485760};onAppUpdateEvent({kind:"update",state:fakeUpdateState});');
 assert.equal(await js('document.querySelector(".update-progress").value'),100);await named('.update-actions button','安装更新');assert.equal(await js('nativeCalls.includes("install")'),true);
-for(const theme of ['light','dark']){await js('setTheme('+JSON.stringify(theme)+')');await shot('app-update-'+theme+'.png');}
-await click('#open-drawer');await pause(100);await named('.about-row','更新历史');await pause(80);
+for(const theme of ['light','dark']){await js('setTheme('+JSON.stringify(theme)+')');await shot('app-update-dialog-'+theme+'.png');}
+assert.equal(await js('androidBack()'),true);assert.equal(await js('!!document.querySelector(".app-update-dialog")'),false);assert.equal(await heading(),'关于');
+await click('.about-row[aria-label="更新历史"]');await pause(80);
 assert.equal(await heading(),'更新历史');assert.equal(await js('!!document.querySelector("#utility-actions .release-github svg")'),true);assert.equal(await js('document.querySelector(".release-history-header").children.length'),1);assert.equal(await js('document.querySelectorAll(".release-entry").length'),10);assert.equal(await js('document.querySelector(".release-pager span").textContent'),'1 / 3');
 await named('.release-pager button','下一页');await pause(70);assert.equal(await js('document.querySelector(".release-pager span").textContent'),'2 / 3');
 await named('.release-pager button','下一页');await pause(70);assert.equal(await js('document.querySelectorAll(".release-entry").length'),5);assert.equal(await js('document.querySelector(".release-pager button:last-child").disabled'),true);
