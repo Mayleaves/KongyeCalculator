@@ -77,15 +77,15 @@ public final class ClassicActivity extends Activity {
         super.onCreate(state);
         prefs=getSharedPreferences("calculator",0);
         dark=prefs.getBoolean("dark",false);
-        justEvaluated=prefs.getBoolean("confirmed",false);
+        justEvaluated=state!=null && state.getBoolean("confirmed",false);
         previousAns=readNumber("previousAns");
         mode=Math.max(0,Math.min(CATEGORIES.length-1,prefs.getInt("keyboard",0)));
         loadKeyboard();
         try{customFunctions=new JSONObject(prefs.getString("customFunctions","{}"));}catch(JSONException ignored){}
         x=readNumber("x");y=readNumber("y");ans=readNumber("ans");
         try{history=new JSONArray(prefs.getString("history","[]"));}catch(JSONException ignored){}
-        String raw=state==null?prefs.getString("expression",""):state.getString("expression","");
-        document.restore(raw,state==null?prefs.getInt("cursor",raw.length()):state.getInt("cursor",raw.length()));
+        String raw=state==null?"":state.getString("expression","");
+        document.restore(raw,state==null?0:state.getInt("cursor",raw.length()));
         build();
         if(state!=null){
             temporaryValue=state.getString("temporaryValue","");temporaryLabel=state.getString("temporaryLabel","");
@@ -102,6 +102,7 @@ public final class ClassicActivity extends Activity {
     }
     @Override protected void onSaveInstanceState(Bundle state){
         state.putString("expression",document.value);state.putInt("cursor",document.cursor);
+        state.putBoolean("confirmed",justEvaluated);
         state.putString("temporaryValue",temporaryValue);state.putString("temporaryLabel",temporaryLabel);
         state.putBoolean("showHistory",historyScreen!=null);
         super.onSaveInstanceState(state);
@@ -112,8 +113,8 @@ public final class ClassicActivity extends Activity {
     }
     private double readNumber(String key){return Double.longBitsToDouble(prefs.getLong(key,0));}
     private void save(){
-        prefs.edit().putBoolean("dark",dark).putBoolean("confirmed",justEvaluated)
-            .putInt("keyboard",mode).putInt("cursor",document.cursor).putString("expression",document.value)
+        prefs.edit().putBoolean("dark",dark).remove("confirmed").remove("cursor").remove("expression")
+            .putInt("keyboard",mode)
             .putString("history",history.toString()).putLong("x",Double.doubleToLongBits(x))
             .putLong("y",Double.doubleToLongBits(y)).putLong("ans",Double.doubleToLongBits(ans))
             .putLong("previousAns",Double.doubleToLongBits(previousAns)).apply();
@@ -845,7 +846,7 @@ public final class ClassicActivity extends Activity {
         rail.addView(button("×","关闭侧栏",this::closeDrawer),new LinearLayout.LayoutParams(-1,dp(43)));
         rail.addView(new View(this),new LinearLayout.LayoutParams(-1,0,1));
         rail.addView(button("⚙","设置",()->leaveDrawer(this::settings)),new LinearLayout.LayoutParams(-1,dp(43)));
-        rail.addView(button("ⓘ","关于",()->leaveDrawer(()->dialog().setTitle("空叶计算器").setMessage("1.0.3 · Android 8.0 及以上").setPositiveButton("关闭",null).show())),new LinearLayout.LayoutParams(-1,dp(43)));
+        rail.addView(button("ⓘ","关于",()->leaveDrawer(()->dialog().setTitle("空叶计算器").setMessage("1.0.4 · Android 8.0 及以上").setPositiveButton("关闭",null).show())),new LinearLayout.LayoutParams(-1,dp(43)));
         ScrollView cardScroll=new ScrollView(this);cardScroll.setFillViewport(true);cardScroll.setBackground(shape(card,0,22));
         LinearLayout.LayoutParams cp=new LinearLayout.LayoutParams(0,-1,1);cp.setMargins(0,dp(8),dp(8),dp(8));panel.addView(cardScroll,cp);
         LinearLayout entries=column();entries.setPadding(dp(10),dp(15),dp(10),dp(12));cardScroll.addView(entries);

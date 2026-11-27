@@ -90,7 +90,7 @@ for(const width of [360,412,480]){
 await send('Emulation.setDeviceMetricsOverride',{width,height:880,deviceScaleFactor:1,mobile:true});
 for(const theme of ['light','dark']){await js('setTheme('+JSON.stringify(theme)+');savedResults=["449149123456789"];drawSavedResults()');
 const geometry=await js('(()=>{const bar=document.querySelector(".edit-tools").getBoundingClientRect();return {height:bar.height,buttons:[...document.querySelectorAll(".edit-tools>.icon")].map(n=>{const r=n.getBoundingClientRect();return[r.top,r.height,r.top+r.height/2]})};})()');
-assert.equal(geometry.height,48);assert(geometry.buttons.every(r=>r[1]===46&&Math.abs(r[2]-geometry.buttons[0][2])<.1));}}
+assert.equal(geometry.height,36);assert(geometry.buttons.every(r=>r[1]===34&&Math.abs(r[2]-geometry.buttons[0][2])<.1));}}
 await send('Emulation.setDeviceMetricsOverride',{width:412,height:880,deviceScaleFactor:1,mobile:true});await shot('toolbar-reference-dark.png');
 await js('replaceExpression(String());insertFormulaPreset("k*x+b",true)');
 await named('#formula-actions button','绘制图像');await pause(100);
@@ -98,6 +98,6 @@ await js('window.nativeCalls=0;window.originalEvaluate=evaluate;evaluate=()=>{na
 await click('[aria-label="放大图像"]');await pause(100);
 assert.equal(await js('nativeCalls'),0);assert((await js('document.querySelector(".curve").getAttribute("d").length'))>100);
 await js('evaluate=window.originalEvaluate;');
-console.log('PASS grouped history braces, results, fractions, numeric fonts, shared 48px toolbar at three widths, and graph sampling without general evaluator');
+console.log('PASS grouped history braces, results, fractions, numeric fonts, shared 36px toolbar at three widths, and graph sampling without general evaluator');
 }
 run().catch(error=>{console.error(error);process.exitCode=1;}).finally(()=>{socket?.close();chrome.kill();});

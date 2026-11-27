@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 空叶计算器 1.0.3 -->
+<!-- 空叶计算器 1.0.4 -->
 <html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="utf-8">
@@ -15,7 +15,7 @@ try {
  root.dataset.theme=(nativeTheme||stored?.theme)==='dark'?'dark':'light';
 } catch (_) {}
 </script>
-<title>空叶计算器 · 1.0.3</title>
+<title>空叶计算器 · 1.0.4</title>
 <link id="dynamic-favicon" rel="icon" type="image/svg+xml" href="data:,">
 <style>
 /* 浅色「水墨极简」与深色「暗曜墨白」。 */
@@ -2446,14 +2446,9 @@ input[type="checkbox"] {
 #expression .token:active:not(:disabled) {opacity:1;}
 </style>
 <style id="reference-category-glyphs">
-/* Glyph, font sizes and 60% resting opacity from the supplied brand HTML mock rail. */
-#tools button:not(:first-child):not([aria-pressed="true"]),
-#tools button:not(:first-child):active:not([aria-pressed="true"]) {background:var(--rail-btn);border-color:var(--line);color:var(--ink);}
-.reference-rail-glyph {display:grid;place-items:center;width:32px;height:32px;font-weight:400;line-height:1;opacity:.6;pointer-events:none;}
-.reference-rail-sci {font-family:Georgia,"Times New Roman",serif;font-size:12px;font-style:italic;}
-.reference-rail-var {font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei UI",sans-serif;font-size:10px;font-style:normal;}
-.reference-rail-fn {font-family:Georgia,"Times New Roman",serif;font-size:10px;font-style:italic;}
-#tools button[aria-pressed="true"] .reference-rail-glyph {opacity:1;}
+/* Unified geometric monoline SVG style across all four keyboard rail tabs. */
+#tools button:not([aria-pressed="true"]),
+#tools button:active:not([aria-pressed="true"]) {background:var(--rail-btn);border-color:var(--line);color:var(--rail-btn-ink);}
 </style>
 <style id="matching-keyboard-manager">
 .manage-grid.key-grid button {border-radius:0;}
@@ -2831,12 +2826,13 @@ input[type="checkbox"] {
 <style id="history-graph-toolbar">
 /* One shared editing toolbar across all four keyboard sections. */
 .edit-tools {
-  height:48px;min-height:48px;padding:0;
+  height:36px;min-height:36px;padding:0;
   grid-template-columns:repeat(6,minmax(0,1fr));
 }
-.edit-tools .icon {width:100%;height:46px;border-radius:0;display:flex;align-items:center;justify-content:center;}
-.edit-tools :is(#clear,#group,#previous,#next,#delete) svg {width:26px;height:26px;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;}
-.edit-tools #reuse {height:46px;line-height:46px;font-size:18px;}
+.edit-tools .icon {width:100%;height:34px;border-radius:0;display:flex;align-items:center;justify-content:center;}
+.edit-tools :is(#clear,#group,#previous,#next,#delete) {color:var(--ink-secondary);}
+.edit-tools :is(#clear,#group,#previous,#next,#delete) svg {width:18px;height:18px;stroke-width:1.75;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.edit-tools #reuse {height:34px;line-height:34px;font-size:15px;}
 .edit-tools:has(#saved-results[hidden]) {grid-template-columns:repeat(5,minmax(0,1fr));}
 .edit-tools:has(#saved-results[hidden]) #group {grid-column:2;}
 .edit-tools:has(#saved-results[hidden]) #previous {grid-column:3;}
@@ -2951,7 +2947,7 @@ input[type="checkbox"] {
 <section id="brand-splash" class="brand-splash splash-overlay splash-stage" aria-label="空叶计算器启动中">
   <div class="skip-row"><button class="skip" id="skip-brand-splash">跳过</button></div>
   <div class="brand-center"><i class="anim-axis-x"></i><i class="anim-axis-y"></i><div class="brand-icon" id="brand-icon"></div><h2 class="anim-title">空叶计算器</h2><p class="anim-sub">极简科学计算 · 留白成算</p></div>
-  <div class="brand-bottom"><div class="brand-progress"><i class="anim-bar"></i></div><span>KONGYE · 1.0.3</span></div>
+  <div class="brand-bottom"><div class="brand-progress"><i class="anim-bar"></i></div><span>KONGYE · 1.0.4</span></div>
 </section>
 <aside class="drawer-layer" id="drawer" aria-label="设置" inert>
     <nav class="drawer-side-rail" id="drawer-rail" aria-label="侧边导航">
@@ -2963,7 +2959,7 @@ input[type="checkbox"] {
       <div class="drawer-header">
         <span class="drawer-logo" id="drawer-logo" aria-hidden="true"></span>
         <h2>空叶计算器</h2>
-        <span class="drawer-version">1.0.3</span>
+        <span class="drawer-version">1.0.4</span>
       </div>
       <nav class="drawer-menu" id="navigation" aria-label="工具"></nav>
     </section>
@@ -3296,9 +3292,9 @@ const icons = {
 
   settings: '<path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.2" fill="var(--card)"/><circle cx="15" cy="17" r="2.2" fill="var(--card)"/>',
   kbdBasic: '<path d="M7 5.2v4.6M4.7 7.5h4.6M14.7 7.5h4.6M5.2 14.7l3.6 3.6M8.8 14.7l-3.6 3.6M14.7 16.5h4.6"/><circle cx="17" cy="13.8" r=".95" fill="currentColor" stroke="none"/><circle cx="17" cy="19.2" r=".95" fill="currentColor" stroke="none"/>',
-  kbdSci: '<text x="12" y="16.5" text-anchor="middle" fill="currentColor" stroke="none" font-family="Times New Roman, Georgia, serif" font-size="23" font-style="italic" font-weight="500">f</text>',
-  kbdVar: '<text x="12" y="16.5" text-anchor="middle" fill="currentColor" stroke="none" font-family="Times New Roman, Georgia, serif" font-size="14" font-style="normal" font-weight="500">a-z</text>',
-  kbdFn: '<text x="12" y="16.5" text-anchor="middle" fill="currentColor" stroke="none" font-family="Times New Roman, Georgia, serif" font-size="15" font-style="italic" font-weight="500">f(x)</text>',
+  kbdSci: '<path d="M5.2 6.4h13.6M9 6.4v7.7c0 1.6-.6 2.8-1.8 3.5M15 6.4v8.8c0 1.4.8 2.4 2.2 2.4"/>',
+  kbdVar: '<circle cx="7.1" cy="13.8" r="2.8"/><path d="M9.9 11v5.6M14.1 6.6v10"/><circle cx="16.9" cy="13.8" r="2.8"/>',
+  kbdFn: '<path d="M9 5.8c-1.1 0-1.8.8-2 2.1l-.9 8.2c-.2 1.3-.9 2.1-2 2.1M4.7 10.9h3.6M11.9 9.1c-1 1.8-1 4.2 0 6M14.1 10.6l2.8 3M16.9 10.6l-2.8 3M19.1 9.1c1 1.8 1 4.2 0 6"/>',
   menu: '<path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>',
   theme: '<circle cx="12" cy="12" r="8.2"/><path d="M12 3.8a8.2 8.2 0 0 1 0 16.4Z" fill="currentColor" stroke="none"/>',
   info: '<circle cx="12" cy="12" r="8.2"/><path d="M12 11v5m0-8.2v.2"/>',
@@ -3572,12 +3568,13 @@ let history = Array.isArray(saved.history) ? saved.history : [];
 let functions = saved.functions || {};
 let variables = saved.variables || {};
 
-let tokens = Array.isArray(saved.draft) ? saved.draft : [];
-let bracketHints = Array.isArray(saved.bracketHints) ? saved.bracketHints.filter(i => ['(',')','[',']','{','}'].includes(tokens[i])) : [];
-let cursor = Math.min(saved.cursor ?? tokens.length, tokens.length);
+// The expression is session-only; saved history and preferences still survive a relaunch.
+let tokens = [];
+let bracketHints = [];
+let cursor = 0;
 let formulaField = null;
 let undo = [], redo = [];
-let lastAnswer = saved.lastAnswer || '', previousAnswer = saved.previousAnswer || '', confirmed = Boolean(saved.confirmed), clockTimer;
+let lastAnswer = saved.lastAnswer || '', previousAnswer = saved.previousAnswer || '', confirmed = false, clockTimer;
 let savedResults = []; // Temporary values belong to the current app session only. // Temporary values belong to the current app session only.
 let lastMode = saved.mode || 0;
 let workbenchMode = null; // null | 'var' | 'vec'
@@ -3590,7 +3587,7 @@ function retain() {
       keys: keyLayout, keyLayoutRevision:2,
       history,
       functions,
-      calculationOptions, variables, draft:tokens, bracketHints, cursor, lastAnswer, previousAnswer, confirmed, mode:lastMode
+      calculationOptions, variables, lastAnswer, previousAnswer, mode:lastMode
     }));
   } catch (err) {}
 }
@@ -3979,9 +3976,9 @@ function addFormulaSectionRows(section) {
 // 左侧 4 区切换导轨
 const railSpecs = [
   ['基础键盘', svgIcon('kbdBasic')],
-  ['科学键盘', '<span class="reference-rail-glyph reference-rail-sci">ƒ</span>'],
-  ['变量键盘', '<span class="reference-rail-glyph reference-rail-var">a–z</span>'],
-  ['函数键盘', '<span class="reference-rail-glyph reference-rail-fn">f(x)</span>']
+  ['科学键盘', svgIcon('kbdSci')],
+  ['变量键盘', svgIcon('kbdVar')],
+  ['函数键盘', svgIcon('kbdFn')]
 ];
 
 const tabs = railSpecs.map(([label, html], index) => {
@@ -7689,7 +7686,7 @@ function renderFunctions(body) {
 
 const projectGitHub='https://github.com/Mayleaves/KongyeCalculator';
 let updateScreen=null,releaseScreen=null,releaseRequest=0;
-let lastUpdateState={phase:'idle',currentVersion:'1.0.3',currentCode:37,downloaded:0,total:0};
+let lastUpdateState={phase:'idle',currentVersion:'1.0.4',currentCode:38,downloaded:0,total:0};
 window.onAppUpdateEvent=event=>{
   if(event.kind==='update'){lastUpdateState=event.state;updateScreen?.(event.state);}
   if(event.kind==='history')releaseScreen?.(event);
@@ -7706,7 +7703,7 @@ function renderAbout(body){
     row.setAttribute('aria-label',title);
     const arrow=element('span');arrow.innerHTML=svgIcon('right');
     const trailing=element('span','about-row-trailing');
-    if(title==='检查更新')trailing.append(element('span','about-version',lastUpdateState.currentVersion||'1.0.3'));
+    if(title==='检查更新')trailing.append(element('span','about-version',lastUpdateState.currentVersion||'1.0.4'));
     trailing.append(arrow);row.append(element('span','',title),trailing);list.append(row);
   }
   wrap.append(list);body.append(wrap);
@@ -7731,7 +7728,7 @@ function showCheckUpdate(){
   const act=(label,run)=>actions.append(button(label,run,'update-action'));
   updateScreen=state=>{
     if(!wrap.isConnected)return;
-    current.textContent='当前版本 '+(state.currentVersion||'1.0.3');
+    current.textContent='当前版本 '+(state.currentVersion||'1.0.4');
     const phase=state.phase||'idle';title.textContent={idle:'检查更新',checking:'正在检查更新',available:'发现新版本',current:'已是最新版本',downloading:'正在下载安装包',ready:'下载完成',cancelled:'下载已取消',error:'检查失败','download-error':'下载未完成'}[phase]||'检查更新';
     message.textContent=state.message||'';
     if(phase==='available')message.textContent='新版本 '+releaseDisplayVersion(state);

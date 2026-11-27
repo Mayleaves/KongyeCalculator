@@ -119,7 +119,7 @@ final class BrandSplashView extends View {
         text(canvas,"极简科学计算 · 留白成算",cx,cy+127,11.5f,muted,progress(elapsed,560,320),false);
         style(line,1,2);canvas.drawLine(cx-48,height-54,cx+48,height-54,paint);
         style(accent,1,2);canvas.drawLine(cx-48,height-54,cx-48+96*Math.min(1,elapsed/1950f),height-54,paint);
-        text(canvas,"K O N G Y E  ·  1.0.3",cx,height-27,10,muted,1,false);
+        text(canvas,"K O N G Y E  ·  1.0.4",cx,height-27,10,muted,1,false);
         style(line,1,1);canvas.drawRoundRect(width-77,28,width-24,55,13.5f,13.5f,paint);
         text(canvas,"跳过",width-50.5f,46,11,muted,1,false);
         canvas.restore();

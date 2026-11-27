@@ -6,8 +6,8 @@ android {
         applicationId = "com.kongye.calculator"
         minSdk = 26
         targetSdk = 36
-        versionCode = 37
-        versionName = "1.0.3"
+        versionCode = 38
+        versionName = "1.0.4"
         testInstrumentationRunner = providers.gradleProperty("instrumentationRunner")
             .orElse("com.kongye.calculator.GraphDeviceTest").get()
     }
