@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 空叶计算器 1.0.4 -->
+<!-- 空叶计算器 1.0.5 -->
 <html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="utf-8">
@@ -15,7 +15,7 @@ try {
  root.dataset.theme=(nativeTheme||stored?.theme)==='dark'?'dark':'light';
 } catch (_) {}
 </script>
-<title>空叶计算器 · 1.0.4</title>
+<title>空叶计算器 · 1.0.5</title>
 <link id="dynamic-favicon" rel="icon" type="image/svg+xml" href="data:,">
 <style>
 /* 浅色「水墨极简」与深色「暗曜墨白」。 */
@@ -1884,8 +1884,8 @@ input[type="checkbox"] {
 .expr-tpl[data-math="logₐ"] .log-argument { margin-left: 1px; }
 .int-bounds { gap: 1px; }
 .tpl-integral .int-dx { font-size: 1em; margin-left: .08em; }
-.sp-stack > .math-large { height: 1em; }
-.sp-stack { gap: 1px; }
+.sp-stack > .math-large { height: auto; line-height: 1; padding: 0 0 .2em; }
+.sp-stack { gap: 2px; }
 .lim-stack .math-word { font-size: 1.15em; height: 1.1em; line-height: 1.1em; }
 .nested-empty { display: inline-flex; align-items: center; justify-content: center; min-width: 1.35ch; height: 1.28em; border: 1px dashed var(--slot-border); border-radius: 3px; background: var(--slot); }
 .parameter-placeholder { display: inline-flex; align-items: center; border: 1px dashed var(--slot-border); background: var(--slot); padding-inline: 2px; border-radius: 2px; }
@@ -2412,16 +2412,20 @@ input[type="checkbox"] {
 <style id="repeat-delete-controls">button[aria-label$="退格"] {touch-action:none;-webkit-touch-callout:none;}</style>
 <style id="keyboard-symbols-final">
 .key-grid button.math-var-sec {color:var(--ink);}
-.key-grid button[aria-label="叉积"] .math-cross {width:30px;height:30px;}
+.key-grid button[aria-label="叉积"] .math-cross {width:19px;height:19px;}
+.key-grid button[aria-label="·"] .dot-symbol {font-size:17px;}
 .formula-art.math-cross {width:.85em;height:1.2em;}
-.formula-art.math-cross path {stroke-width:1.7;stroke-linecap:square;}
-.sci-sym .kop-under {display:grid;grid-template-rows:5px 24px 5px;justify-items:center;align-items:center;gap:2px;width:20px;}
-.kop-under .kop-glyph {display:block;width:20px;height:24px;overflow:visible;}
-.kop-under .kslot.flat {width:10px;height:5px;margin:0;}
-.lim-key-wrap {gap:3px;}
-.lim-key-top {font:400 17px/1 var(--math-font);}
-.lim-key-sub {font-size:11px;gap:3px;align-items:center;}
-.lim-key-sub .kslot.micro {width:9px;height:12px;border-radius:2px;}
+.formula-art.math-cross path {stroke-width:1.65;stroke-linecap:square;}
+.sci-sym.vec-key {gap:2px;font-size:23px;line-height:1;}
+.sci-sym.vec-key .kstack {gap:2.5px;}
+.sci-sym.vec-key .kslot.sm {width:8.5px;height:9px;border-radius:2px;}
+.sci-sym .kop-under {display:grid;grid-template-rows:7.5px 17px 7.5px;justify-items:center;align-items:center;gap:2px;width:17px;}
+.kop-under .kop-glyph {display:block;width:15px;height:17px;overflow:visible;}
+.kop-under .kslot.flat {width:7px;height:7.5px;border-radius:1.8px;margin:0;}
+.lim-key-wrap {gap:2px;}
+.lim-key-top {font:400 17px/.96 var(--math-font);margin-bottom:0;}
+.lim-key-sub {font-size:11px;gap:2.5px;align-items:center;}
+.lim-key-sub .kslot.micro {width:8.5px;height:10.5px;border-radius:2px;}
 </style>
 <style id="uniform-basic-key-backgrounds">
 #keyboard .key-section[aria-label="基础"] .key-grid {--op-ink:var(--ink);--var-ink:var(--ink);}
@@ -2947,7 +2951,7 @@ input[type="checkbox"] {
 <section id="brand-splash" class="brand-splash splash-overlay splash-stage" aria-label="空叶计算器启动中">
   <div class="skip-row"><button class="skip" id="skip-brand-splash">跳过</button></div>
   <div class="brand-center"><i class="anim-axis-x"></i><i class="anim-axis-y"></i><div class="brand-icon" id="brand-icon"></div><h2 class="anim-title">空叶计算器</h2><p class="anim-sub">极简科学计算 · 留白成算</p></div>
-  <div class="brand-bottom"><div class="brand-progress"><i class="anim-bar"></i></div><span>KONGYE · 1.0.4</span></div>
+  <div class="brand-bottom"><div class="brand-progress"><i class="anim-bar"></i></div><span>KONGYE · 1.0.5</span></div>
 </section>
 <aside class="drawer-layer" id="drawer" aria-label="设置" inert>
     <nav class="drawer-side-rail" id="drawer-rail" aria-label="侧边导航">
@@ -2959,7 +2963,7 @@ input[type="checkbox"] {
       <div class="drawer-header">
         <span class="drawer-logo" id="drawer-logo" aria-hidden="true"></span>
         <h2>空叶计算器</h2>
-        <span class="drawer-version">1.0.4</span>
+        <span class="drawer-version">1.0.5</span>
       </div>
       <nav class="drawer-menu" id="navigation" aria-label="工具"></nav>
     </section>
@@ -2981,7 +2985,6 @@ input[type="checkbox"] {
       <div class="readout" id="readout-box">
         <div class="expression" id="expression" aria-label="计算表达式"></div>
         <div class="result-bar">
-          <span class="calc-tag" id="calc-tag" hidden></span>
           <span class="exact-result" id="exact-answer" hidden></span>
           <output id="answer" aria-live="polite"></output>
           <button class="chip" id="stash" aria-label="暂存当前结果" title="暂存当前结果" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3M16 2v10m-5-5h10"/></svg></button>
@@ -3765,7 +3768,7 @@ function drawStaticSciKey(key) {
     return wrap;
   }
   if (key === '[⋮]') {
-    const wrap = element('span', 'sci-sym');
+    const wrap = element('span', 'sci-sym vec-key');
     const stack = element('span', 'kstack');
     stack.append(ks('sm'), ks('sm'));
     wrap.append('[', stack, ']');
@@ -5360,16 +5363,6 @@ function evaluateDisplayLine(line) {
 }
 
 function computeDisplayOutput() {
-  // 检测当前算式所含的高数胶囊标签
-  const tagEl = $('calc-tag');
-  const taggedToken = tokens.find(t => typeof t === 'object' && inlineSlotTemplates.get(t.key)?.tag);
-  if (taggedToken) {
-    tagEl.textContent = taggedToken.key === 'lim' ? '计算结果' : inlineSlotTemplates.get(taggedToken.key).tag;
-    tagEl.hidden = false;
-  } else {
-    tagEl.hidden = true;
-  }
-
   if (tokens.length === 1 && tokens[0]?.key === 'stats') {
     const fields = tokens[0].fields;
     const summary = (name,offset) => {
@@ -5647,7 +5640,13 @@ function drawAnswer(savePreview = false) {
   } else if (algebra) {
     actions.append(...['因式分解','多项式展开'].map(mode => button(mode,() => calculateAlgebra(mode),'action')));
   }
-  actions.hidden = !preset && !ellipse && !algebra;
+  const taggedToken = tokens.find(t => typeof t === 'object' && inlineSlotTemplates.get(t.key)?.tag);
+  if (taggedToken) {
+    const tagBtn = button(taggedToken.key === 'lim' ? '计算结果' : inlineSlotTemplates.get(taggedToken.key).tag, () => finishCalculation(), 'action');
+    tagBtn.id = 'calc-tag';
+    actions.append(tagBtn);
+  }
+  actions.hidden = actions.childElementCount === 0;
   let out = { text: '', symbolic: false };
   try {
     out = computeDisplayOutput();
@@ -5692,8 +5691,6 @@ function recordCalculation(result, exact) {
   if (history.length > 100) history.length = 100;
   return true;
 }
-
-$('calc-tag').onclick = () => finishCalculation();
 
 const closingBrackets = {'(': ')', '[': ']', '{': '}'};
 
@@ -7686,7 +7683,7 @@ function renderFunctions(body) {
 
 const projectGitHub='https://github.com/Mayleaves/KongyeCalculator';
 let updateScreen=null,releaseScreen=null,releaseRequest=0;
-let lastUpdateState={phase:'idle',currentVersion:'1.0.4',currentCode:38,downloaded:0,total:0};
+let lastUpdateState={phase:'idle',currentVersion:'1.0.5',currentCode:39,downloaded:0,total:0};
 window.onAppUpdateEvent=event=>{
   if(event.kind==='update'){lastUpdateState=event.state;updateScreen?.(event.state);}
   if(event.kind==='history')releaseScreen?.(event);
@@ -7703,7 +7700,7 @@ function renderAbout(body){
     row.setAttribute('aria-label',title);
     const arrow=element('span');arrow.innerHTML=svgIcon('right');
     const trailing=element('span','about-row-trailing');
-    if(title==='检查更新')trailing.append(element('span','about-version',lastUpdateState.currentVersion||'1.0.4'));
+    if(title==='检查更新')trailing.append(element('span','about-version',lastUpdateState.currentVersion||'1.0.5'));
     trailing.append(arrow);row.append(element('span','',title),trailing);list.append(row);
   }
   wrap.append(list);body.append(wrap);
@@ -7728,7 +7725,7 @@ function showCheckUpdate(){
   const act=(label,run)=>actions.append(button(label,run,'update-action'));
   updateScreen=state=>{
     if(!wrap.isConnected)return;
-    current.textContent='当前版本 '+(state.currentVersion||'1.0.4');
+    current.textContent='当前版本 '+(state.currentVersion||'1.0.5');
     const phase=state.phase||'idle';title.textContent={idle:'检查更新',checking:'正在检查更新',available:'发现新版本',current:'已是最新版本',downloading:'正在下载安装包',ready:'下载完成',cancelled:'下载已取消',error:'检查失败','download-error':'下载未完成'}[phase]||'检查更新';
     message.textContent=state.message||'';
     if(phase==='available')message.textContent='新版本 '+releaseDisplayVersion(state);

@@ -1,6 +1,6 @@
 const projectGitHub='https://github.com/Mayleaves/KongyeCalculator';
 let updateScreen=null,releaseScreen=null,releaseRequest=0;
-let lastUpdateState={phase:'idle',currentVersion:'1.0.4',currentCode:38,downloaded:0,total:0};
+let lastUpdateState={phase:'idle',currentVersion:'1.0.5',currentCode:39,downloaded:0,total:0};
 window.onAppUpdateEvent=event=>{
   if(event.kind==='update'){lastUpdateState=event.state;updateScreen?.(event.state);}
   if(event.kind==='history')releaseScreen?.(event);
@@ -17,7 +17,7 @@ function renderAbout(body){
     row.setAttribute('aria-label',title);
     const arrow=element('span');arrow.innerHTML=svgIcon('right');
     const trailing=element('span','about-row-trailing');
-    if(title==='检查更新')trailing.append(element('span','about-version',lastUpdateState.currentVersion||'1.0.4'));
+    if(title==='检查更新')trailing.append(element('span','about-version',lastUpdateState.currentVersion||'1.0.5'));
     trailing.append(arrow);row.append(element('span','',title),trailing);list.append(row);
   }
   wrap.append(list);body.append(wrap);
@@ -42,7 +42,7 @@ function showCheckUpdate(){
   const act=(label,run)=>actions.append(button(label,run,'update-action'));
   updateScreen=state=>{
     if(!wrap.isConnected)return;
-    current.textContent='当前版本 '+(state.currentVersion||'1.0.4');
+    current.textContent='当前版本 '+(state.currentVersion||'1.0.5');
     const phase=state.phase||'idle';title.textContent={idle:'检查更新',checking:'正在检查更新',available:'发现新版本',current:'已是最新版本',downloading:'正在下载安装包',ready:'下载完成',cancelled:'下载已取消',error:'检查失败','download-error':'下载未完成'}[phase]||'检查更新';
     message.textContent=state.message||'';
     if(phase==='available')message.textContent='新版本 '+releaseDisplayVersion(state);
